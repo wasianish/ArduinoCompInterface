@@ -1,5 +1,6 @@
 int caStartByte = 36; // Packet start byte from comp to arduino
 int acStartByte = 64; // Packet start byte from arduino to comp
+int caSerialEndByte = 255; // Byte to stop serial stream
 
 char inBuffer[3]; // Buffer of packets from comp to arduino
 char outBuffer[4]; // Buffer of packets from arduino to comp
@@ -35,7 +36,10 @@ void loop() {
   if(Serial.available()) {
     compByte = Serial.read();
     if(serialForward != -1) {
-      // Need way to exit serial forwarding
+      if(compByte = caSerialEndByte) {
+        serialForward = -1;
+        continue;
+      }
       switch(serialForward) {
         case 0:
           Serial.write(compByte);
